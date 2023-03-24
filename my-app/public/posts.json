@@ -1,0 +1,19 @@
+{
+    "posts": [
+        {
+            "name": "Cheddar",
+            "origin": "England",
+            "texture": "Hard"
+        },
+        {
+            "name": "Gouda",
+            "origin": "Netherlands",
+            "texture": "Semi-hard"
+        },
+        {
+            "name": "Brie",
+            "origin": "France",
+            "texture": "Soft"
+        }
+    ]
+}

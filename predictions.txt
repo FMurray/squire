@@ -1,0 +1,120 @@
+1. pages/posts/[id].tsx
+    import React from 'react';
+    import { PostData } from '../../api/posts';
+    import { formatDate } from '../../utils/utils';
+    import './[id].css';
+    
+    interface PostProps {
+        post: PostData;
+    }
+    
+    const Post: React.FC<PostProps> = ({ post }) => {
+        return (
+            <div className='post'>
+                <h2>{post.title}</h2>
+                <p>{post.body}</p>
+                <p>Posted on {formatDate(post.date)}</p>
+            </div>
+        );
+    };
+    
+    export default Post;
+    
+    
+    2. utils/utils.ts
+    The code for the file
+    
+    export const formatDate = (date: string) => {
+        const [year, month, day] = date.split('-');
+        return `${month}/${day}/${year}`;
+    };2. pages/posts/[id].scss
+    // Post view styling
+    .post-view {
+        background-color: #fafafa;
+        padding: 10px; 
+        width: 75%; 
+        margin-left: auto; 
+        margin-right: auto;
+    }
+
+    h2 {
+        font-size: 2.5rem;
+        font-family: 'Roboto', sans-serif;
+        font-weight: 500;
+        color: #333333;
+    }
+
+    .post-content {
+        font-size: 1.2rem;
+        font-family: 'Lato', sans-serif;
+        font-weight: 300;
+        line-height: 1.5;
+        color: #333333;
+    }
+
+    // Importing global styles
+    @import '../../styles/globals.css';
+    
+    // Importing Next.js utilities
+    @import '../../node_modules/next/dist/next-server/lib/head.js';3. pages/posts/[id].test.ts
+    import React from 'react';
+    import { shallow, mount, render } from 'enzyme';
+    import { PostView } from './[id].tsx';
+    
+    describe('PostView component', () => {
+      it('renders without crashing', () => {
+        shallow(<PostView />);
+      });
+    
+      it('has the correct number of elements', () => {
+        const component = mount(<PostView />);
+        expect(component.find('div').length).toBe(1);
+        expect(component.find('h1').length).toBe(1);
+        expect(component.find('p').length).toBe(2);
+      });
+    
+      it('has the expected text content', () => {
+        const component = render(<PostView />);
+        expect(component.text()).toContain('Welcome to the Post View page');
+        expect(component.text()).toContain('This page will display your post');
+      });
+    });
+    
+    // Any other files needed to compile the code:
+    // 1. pages/posts/[4. pages/api/posts.js
+    // import necessary files
+    import { Request, Response } from 'express';
+    import fs from 'fs';
+
+    // read the json file and parse it into an object
+    const postsObj = JSON.parse(
+        fs.readFileSync('./public/posts.json', 'utf8')
+    );
+
+    // get the posts in json format
+    export default (req: Request, res: Response) => {
+        res.status(200).json(postsObj);
+    };
+
+    // create a posts.json file to hold the posts
+    The code for the posts.json file in the public directory
+    
+    {
+        "posts": [
+            {
+                "name": "Cheddar",
+                "origin": "England",
+                "texture": "Hard"
+            },
+            {
+                "name": "Gouda",
+                "origin": "Netherlands",
+                "texture": "Semi-hard"
+            },
+            {
+                "name": "Brie",
+                "origin": "France",
+                "texture": "Soft"
+            }
+        ]
+    }

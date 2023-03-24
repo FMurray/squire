@@ -7,6 +7,6 @@ will have a sub-directory like `posts/[id].tsx`.
 
 # How to create a page
 
-Create a `<page name>/[<parameter>]/.tsx` file with the React component
+Create a `<page name>/[<parameter>].tsx` file with the React component
 Create a `<page name>/[<parameter>].scss` file with the styles
 Create a `<page name>/[<parameter>].test.ts` file with tests
