@@ -1,13 +1,21 @@
-    // import necessary files
-    import { Request, Response } from 'express';
-    import fs from 'fs';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
-    // read the json file and parse it into an object
-    const postsObj = JSON.parse(
-        fs.readFileSync('./public/posts.json', 'utf8')
-    );
+type Post = {
+  title: string;
+  body: string;
+};
 
-    // get the posts in json format
-    export default (req: Request, res: Response) => {
-        res.status(200).json(postsObj);
-    };
+const dummyData: Post[] = [
+  {
+    title: 'Cheese Post 1',
+    body: 'This is the body of the first cheese post.',
+  },
+  {
+    title: 'Cheese Post 2',
+    body: 'This is the body of the second cheese post.',
+  },
+];
+
+export default function handler(req: NextApiRequest, res: NextApiResponse<Post[]>) {
+  res.status(200).json(dummyData);
+}

@@ -1,16 +1,17 @@
-// import { render } from '@testing-library/react';
 // import React from 'react';
+// import { render } from '@testing-library/react';
 // import Post from './[id]';
 
-// describe('Post view', () => {
-//   it('renders the post', () => {
-//     const post = {
-//       id: 1,
-//       title: 'My Post',
-//       content: 'This is a post about something'
-//     };
-//     const { getByText } = render(<Post post={post} />);
-//     const titleText = getByText(/My Post/i);
-//     expect(titleText).toBeInTheDocument();
-//   });
+// test('renders post with title and body', () => {
+//   const post = {
+//     id: '1',
+//     title: 'My Post',
+//     body: 'This is my post.'
+//   };
+
+//   const { getByText } = render(<Post {...post} />);
+//   const postElement = getByText(/My Post/i);
+//   expect(postElement).toBeInTheDocument();
+//   const bodyElement = getByText(/This is my post./i);
+//   expect(bodyElement).toBeInTheDocument();
 // });

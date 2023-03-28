@@ -1,20 +1,29 @@
-import React from 'react';
-import { PostData } from '../api/posts';
-import { formatDate } from '../utils/utils';
-import './[id].css';
+import { useEffect, useState } from 'react';
+import styles from '../styles/posts.module.scss';
 
-interface PostProps {
-    post: PostData;
-}
-
-const Post: React.FC<PostProps> = ({ post }) => {
-    return (
-        <div className='post'>
-            <h2>{post.title}</h2>
-            <p>{post.body}</p>
-            <p>Posted on {formatDate(post.date)}</p>
-        </div>
-    );
+type Post = {
+  title: string;
+  body: string;
 };
 
-export default Post;
+export default function UserPosts() {
+  const [posts, setPosts] = useState<Post[]>([]);
+
+  useEffect(() => {
+    fetch('/api/posts')
+      .then((response) => response.json())
+      .then((data) => { console.log(data); return data })
+      .then((data) => setPosts(data));
+  }, []);
+
+  return (
+    <div>
+      {posts.map((post, index) => (
+        <div key={index}>
+          <h2>{post.title}</h2>
+          <p>{post.body}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
