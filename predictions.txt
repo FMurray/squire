@@ -1,80 +1,107 @@
-1. my-app/pages/user-posts.tsx: This file will contain the React component for the user's posts view. It should display the post title and body, and fetch data from the API route.
+File 1: my-app/pages/userPosts.tsx
 
-```tsx
-import { useEffect, useState } from 'react';
-import '../styles/user-posts.scss';
+```javascript
+import React, { useEffect, useState } from 'react';
+import { Post } from '../../public/posts';
+import './userPosts.scss';
 
-type Post = {
-  title: string;
-  body: string;
-};
+interface UserPostsProps {
+  posts: Post[];
+}
 
-export default function UserPosts() {
-  const [posts, setPosts] = useState<Post[]>([]);
-
-  useEffect(() => {
-    fetch('/api/user-posts')
-      .then((response) => response.json())
-      .then((data) => setPosts(data));
-  }, []);
-
+const UserPosts: React.FC<UserPostsProps> = ({ posts }) => {
   return (
-    <div>
-      {posts.map((post, index) => (
-        <div key={index}>
+    <div className="user-posts">
+      {posts.map((post) => (
+        <div key={post.id} className="post">
           <h2>{post.title}</h2>
           <p>{post.body}</p>
         </div>
       ))}
     </div>
   );
+};
+
+export default UserPosts;
+```
+
+File 2: my-app/pages/userPosts.scss
+
+```scss
+.user-posts {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .post {
+    width: 80%;
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+
+    h2 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    p {
+      margin: 10px 0 0;
+      font-size: 16px;
+    }
+  }
 }
 ```
 
-2. my-app/styles/user-posts.scss: This file will contain the styles for the user's posts view.
+File 3: my-app/pages/userPosts.test.ts
 
-```scss
-// Add your styles here
-```
-
-3. my-app/pages/user-posts.test.ts: This file will contain tests for the user's posts view.
-
-```ts
+```javascript
 import { render, screen } from '@testing-library/react';
-import UserPosts from './user-posts';
+import UserPosts from './userPosts';
+import { posts } from '../../public/posts';
 
 test('renders user posts', () => {
-  render(<UserPosts />);
-  const titleElement = screen.getByText(/dummy title/i);
-  expect(titleElement).toBeInTheDocument();
+  render(<UserPosts posts={posts} />);
+  const postElements = screen.getAllByTestId('post');
+  expect(postElements.length).toBe(posts.length);
 });
 ```
 
-4. my-app/pages/api/user-posts.ts: This file will contain the API route for fetching the user's posts in JSON format.
+File 4: my-app/pages/api/userPosts.ts
 
-```ts
-import type { NextApiRequest, NextApiResponse } from 'next';
+```javascript
+import { NextApiRequest, NextApiResponse } from 'next';
+import { posts } from '../../public/posts';
 
-type Post = {
-  title: string;
-  body: string;
+export default (req: NextApiRequest, res: NextApiResponse) => {
+  res.status(200).json(posts);
 };
-
-const dummyData: Post[] = [
-  {
-    title: 'Cheese Post 1',
-    body: 'This is the body of the first cheese post.',
-  },
-  {
-    title: 'Cheese Post 2',
-    body: 'This is the body of the second cheese post.',
-  },
-];
-
-export default function handler(req: NextApiRequest, res: NextApiResponse<Post[]>) {
-  res.status(200).json(dummyData);
-}
 ```
 
-Add the following file to the directory structure:
-- my-app/styles/user-posts.scss
+File 5: my-app/public/posts.ts
+
+```javascript
+export interface Post {
+  id: number;
+  title: string;
+  body: string;
+}
+
+export const posts: Post[] = [
+  {
+    id: 1,
+    title: 'Cheddar',
+    body: 'Cheddar is a popular type of cheese that originated in England.',
+  },
+  {
+    id: 2,
+    title: 'Brie',
+    body: 'Brie is a soft cheese that originated in France.',
+  },
+  {
+    id: 3,
+    title: 'Gouda',
+    body: 'Gouda is a semi-hard cheese that originated in the Netherlands.',
+  },
+];
+```
