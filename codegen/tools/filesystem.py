@@ -1,10 +1,8 @@
 from langchain.agents import initialize_agent, Tool
-from langchain.agents import AgentType
 from langchain.tools import BaseTool
 
 import os
-
-
+from config import Config
 
 class GetDirectoryStructure(BaseTool):
     name = "Get Directory Structure"
@@ -12,14 +10,16 @@ class GetDirectoryStructure(BaseTool):
 
     def _run(self, query: str) -> str:
         """Use the tool."""
-        start_path = ""
-        return self.list_files
+        start_path = Config.user_app_base
+        query_path = start_path + "/" + query
+        print(query_path)
+        return self.list_files(start_path + "/" + query)
     
     async def _arun(self, query: str) -> str:
         """Use the tool asynchronously."""
         raise NotImplementedError("BingSearchRun does not support async")
 
-    def list_files(startpath, exclude=[""]):
+    def list_files(self, startpath, exclude=set(["node_modules", ".next"])):
         outstr = ""
         for root, dirs, files in os.walk(startpath):
             dirs[:] = [d for d in dirs if d not in exclude]
