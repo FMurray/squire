@@ -3,6 +3,8 @@ from langchain import OpenAI
 from typing import List, Tuple, Any, Union
 from langchain.schema import AgentAction, AgentFinish
 
+from prompts.file_descriptions import FileDescriptionPromptTemplate
+
 class CodegenAgent(BaseSingleActionAgent):
     @property
     def input_keys(self):
@@ -21,8 +23,8 @@ class CodegenAgent(BaseSingleActionAgent):
         Returns:
             Action specifying what tool to use.
         """
-        print(self.input_keys)
-        return AgentAction(tool="Get Directory Structure", tool_input="any", log="")
+        print(intermediate_steps)
+        return AgentAction(tool="Get Files For Feature Description", tool_input="any", log="")
 
     async def aplan(
         self, intermediate_steps: List[Tuple[AgentAction, str]], **kwargs: Any

@@ -11,9 +11,7 @@ class GetDirectoryStructure(BaseTool):
     def _run(self, query: str) -> str:
         """Use the tool."""
         start_path = Config.user_app_base
-        query_path = start_path + "/" + query
-        print(query_path)
-        return self.list_files(start_path + "/" + query)
+        return self.list_files(start_path)
     
     async def _arun(self, query: str) -> str:
         """Use the tool asynchronously."""
