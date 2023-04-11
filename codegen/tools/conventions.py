@@ -18,12 +18,14 @@ class GetAppConventions(BaseTool):
         """Use the tool."""
         start_path = Config.user_app_base
         return self.get_app_conventions(start_path)
-    
-    async def _arun(self, query: str) -> str:
-        """Use the tool asynchronously."""
-        return await self.get_app_conventions(Config.user_app_base)
-    
+
     def get_app_conventions(self, start_path):
         """ Get the app conventions. """
         docs = MarkdownDocsLoader(start_path).load()
         return docs
+    
+    async def _arun(self, query: str) -> str:
+        """Use the tool asynchronously."""
+        docs = await MarkdownDocsLoader(Config.user_app_base).aload()
+        return "".join([doc.page_content for doc in docs])
+    

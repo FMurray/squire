@@ -26,7 +26,5 @@ class GetFilesForFeatureDescription(BaseTool):
     
     async def _arun(self, query: str) -> str:
         """Use the tool asynchronously."""
-        # chain = files_chain()
         docs = await MarkdownDocsLoader(Config.user_app_base).aload()
-        # files = chain.predict(feature_description=query, markdown_docs=docs)
         return "".join([doc.page_content for doc in docs])

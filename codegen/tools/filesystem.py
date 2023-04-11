@@ -15,7 +15,7 @@ class GetDirectoryStructure(BaseTool):
     
     async def _arun(self, query: str) -> str:
         """Use the tool asynchronously."""
-        raise NotImplementedError("BingSearchRun does not support async")
+        return self.list_files(Config.user_app_base)
 
     def list_files(self, startpath, exclude=set(["node_modules", ".next"])):
         outstr = ""

@@ -77,7 +77,7 @@ async def run():
     print("Generating...", flush=True)
     await cg.generate(
         run_id=run_id,
-        feature_description="I want to add a new page to show posts. What are the files I need?",
+        feature_description="I want to add a new page to show posts. How do I do it?",
     )
     return {}
 
