@@ -1,7 +1,5 @@
 import sqlite3
 
-c.execute("CREATE TABLE documents (id INTEGER PRIMARY KEY, name TEXT, content TEXT)")
-
 class Documents(): 
     def __init__(self, name, content): 
         conn = sqlite3.connect('storage.db')

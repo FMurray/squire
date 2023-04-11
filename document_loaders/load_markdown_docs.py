@@ -14,3 +14,12 @@ class MarkdownDocsLoader(DirectoryLoader):
         docs = list(filter(lambda x: 'node_modules' not in x.metadata['source'], docs))
 
         return docs
+    
+    async def aload(self): 
+        doc_loader = DirectoryLoader(self.path, glob=self.glob)
+
+        docs = doc_loader.load()
+
+        docs = list(filter(lambda x: 'node_modules' not in x.metadata['source'], docs))
+
+        return docs

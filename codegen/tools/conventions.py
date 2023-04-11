@@ -21,7 +21,7 @@ class GetAppConventions(BaseTool):
     
     async def _arun(self, query: str) -> str:
         """Use the tool asynchronously."""
-        raise NotImplementedError("GetAppConventions does not support async")
+        return await self.get_app_conventions(Config.user_app_base)
     
     def get_app_conventions(self, start_path):
         """ Get the app conventions. """

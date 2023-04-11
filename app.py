@@ -5,25 +5,32 @@ from codegen.tools.filesystem import GetDirectoryStructure
 from codegen.tools.conventions import GetAppConventions
 from codegen.tools.format_file_output import FormatFileOutput
 from codegen.tools.get_files_for_feature_description import GetFilesForFeatureDescription
-from prompts.file_descriptions import FileDescriptionPromptTemplate
+from codegen import Codegen
+from storage import Database
 
 from langchain.llms import OpenAI
 from langchain.agents import AgentExecutor, AgentOutputParser, LLMSingleActionAgent
 from langchain.schema import AgentAction, AgentFinish
 from langchain.chains import LLMChain
+import asyncio
 
 from config import Config
 
+import uuid
 from typing import Union
 import re
 
 
 tools = [
-    # GetDirectoryStructure(),
-    # GetAppConventions(), 
-    # FormatFileOutput()
+    GetDirectoryStructure(),
+    GetAppConventions(), 
+    FormatFileOutput(),
     GetFilesForFeatureDescription()
 ]
+
+
+anon_key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0"
+db = Database(supabase_url="http://localhost:54321", supabase_key=anon_key)
 
 class CustomOutputParser(AgentOutputParser):
     
@@ -48,26 +55,35 @@ class CustomOutputParser(AgentOutputParser):
     
 output_parser = CustomOutputParser()
 
-prompt = FileDescriptionPromptTemplate(
-    tools=tools,
-    input_variables=["input", "intermediate_steps"]
-)
-
-llm = OpenAI(temperature=0.7)
-llm_chain = LLMChain(llm=llm, prompt=prompt)
-
-
-agent = CodegenAgent()
-# tool_names = [tool.name for tool in tools]
-# agent = LLMSingleActionAgent(
-#     llm_chain=llm_chain, 
-#     output_parser=output_parser,
-#     stop=["\nObservation:"], 
-#     allowed_tools=tool_names
+# prompt = FileDescriptionPromptTemplate(
+#     tools=tools,
+#     input_variables=["input", "intermediate_steps"]
 # )
 
-agent_executor = AgentExecutor.from_agent_and_tools(agent=agent, tools=tools, verbose=True)
-agent_executor.run("I want to add a new page to show posts. What are the files I need?")
+# llm = OpenAI(temperature=0.7)
+# llm_chain = LLMChain(llm=llm, prompt=prompt)
+
+
+cg = Codegen.from_tools_and_database(
+    # The order in which we pass tools HAS an effect on the LLM behaviour.
+    custom_tools=tools,
+    database=db,
+)
+
+async def run():
+    run_id = str(uuid.uuid4())
+    await db.create_generation(run_id)
+
+    print("Generating...", flush=True)
+    await cg.generate(
+        run_id=run_id,
+        feature_description="I want to add a new page to show posts. What are the files I need?",
+    )
+    return {}
+
+asyncio.run(run())
+# agent_executor = AgentExecutor.from_agent_and_tools(agent=agent, tools=tools, verbose=True)
+# agent_executor.run("I want to add a new page to show posts. What are the files I need?")
 
 
 # agent = CodegenAgent()

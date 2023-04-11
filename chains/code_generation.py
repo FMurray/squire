@@ -2,7 +2,8 @@ from langchain.chains.base import Chain
 from langchain.chains import LLMChain
 from langchain.llms import OpenAI
 from langchain.schema import BaseLanguageModel
-from prompts.file_descriptions import FileDescriptionPromptTemplate
+
+from codegen.prompts.file_descriptions import FileDescriptionPromptTemplate
 
 from typing import Dict, List
 
