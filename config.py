@@ -8,3 +8,4 @@ class Config():
     user_app_base = os.getenv("USER_APP_BASE")
     supabase_anon_key = os.getenv("SUPABASE_ANON_KEY")
     supabase_local_url = os.getenv("SUPABASE_LOCAL_URL")
+    openai_model_name = os.getenv("CODEGEN_OPENAI_MODEL_NAME")
