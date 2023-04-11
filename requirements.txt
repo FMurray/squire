@@ -3,3 +3,5 @@ openai
 unstructured
 python-dotenv
 postgrest
+fastapi
+uvicorn

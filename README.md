@@ -25,5 +25,7 @@ Sandbox for using OpenAI API to generate code based on a natural language featur
 - add the secrets from .env.dev into a .env file (gitignored)
 
 - copy anon key and local url from the supabase CLI ouput to .env
+SUPABASE_ANON_KEY="<output from cli>"
+SUPABASE_LOCAL_URL="<output from cli>"
 
 - run `python app.py`
