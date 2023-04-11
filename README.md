@@ -6,8 +6,10 @@ Sandbox for using OpenAI API to generate code based on a natural language featur
 
 - Python (3.8 or greater)
 - Node.js (Tested using 18.3.0)
-- Jupyter
 - OpenAI API key
+- Docker
+- [Supabase CLI](https://supabase.com/docs/reference/cli/start)
+
 
 ## How to run
 
@@ -17,7 +19,11 @@ Sandbox for using OpenAI API to generate code based on a natural language featur
 - install the next.js dependencies
 `cd my-app && yarn install`
 
-- Start your Jupyter server.
-`jupyter notebook`
+- start supabase:
+`supabase start`
 
-- Open the `feature_generation.ipynb`, insert your api key and run the cells
+- add the secrets from .env.dev into a .env file (gitignored)
+
+- copy anon key and local url from the supabase CLI ouput to .env
+
+- run `python app.py`
