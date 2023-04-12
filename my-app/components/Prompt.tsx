@@ -49,7 +49,7 @@ export function Prompt () {
 
     }
 
-    const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
         if (e.key === 'Enter') {
             e.preventDefault()
             generate();

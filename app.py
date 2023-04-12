@@ -65,16 +65,19 @@ def home():
 class GenerateRequest(BaseModel): 
     feature_description: str
 
+background_tasks = set()
+
 @app.post("/generate")
 async def generate(generate_request: GenerateRequest):
     run_id = str(uuid.uuid4())
     await db.create_generation(run_id)
 
     print("Generating...", flush=True)
-    asyncio.create_task(cg.generate(
+    task = asyncio.create_task(cg.generate(
         run_id=run_id,
         feature_description=generate_request.feature_description,
     ))
+    task.add_done_callback(background_tasks.discard)
     return { "id": run_id, "status": "Starting generation"}
 
 
