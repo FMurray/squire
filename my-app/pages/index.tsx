@@ -6,6 +6,7 @@ import { supabase } from '../lib/supabaseClient'
 import { useEffect, useState } from 'react'
 
 import { Prompt } from '../components/Prompt'
+import { useLatestGenerationMessage } from '@/hooks/useLatestGeneration'
 
 
 const inter = Inter({ subsets: ['latin'] })
@@ -21,6 +22,7 @@ export async function getServerSideProps() {
 }
 
 export default function Home({ generations }: any) {
+
   return (
     <>
       <Head>
@@ -30,35 +32,40 @@ export default function Home({ generations }: any) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        <div className={styles.description}>
-          <p>
-            Get started by editing&nbsp;
-            <code className={styles.code}>pages/index.tsx</code>
-          </p>
+
+        <div className="flex justify-center border border-b-neutral-300 bg-neutral-100 py-2 text-sm text-neutral-500 dark:border-none dark:bg-[#444654] dark:text-neutral-200">
+            {/* {t('Model')}: {selectedConversation?.model.name} */}
+            <button
+            className="ml-2 cursor-pointer hover:opacity-50"
+            // onClick={handleSettings}
+            >
+            {/* <IconSettings size={18} /> */}
+            Settings
+            </button>
+            <button
+            className="ml-2 cursor-pointer hover:opacity-50"
+            // onClick={onClearAll}
+            >
+            {/* <IconClearAll size={18} /> */}
+            Clear All
+            </button>
         </div>
 
-        <div className={styles.center}>
-          <Image
-            className={styles.logo}
-            src="/next.svg"
-            alt="Next.js Logo"
-            width={180}
-            height={37}
-            priority
-          />
-          <div className={styles.thirteen}>
-            <Image
-              src="/thirteen.svg"
-              alt="13"
-              width={40}
-              height={31}
-              priority
+        {/* {selectedConversation?.messages.map((message, index) => (
+            <ChatMessage
+            key={index}
+            message={message}
+            messageIndex={index}
             />
-          </div>
-        </div>
+        ))}
+
+        {loading && <ChatLoader />} */}
+
+        <div
+            className="h-[162px] bg-white dark:bg-[#343541]"
+        />
 
         <Prompt></Prompt>
-
 
         <div className={styles.grid}>
           <a

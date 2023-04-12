@@ -64,10 +64,11 @@ def home():
 
 class GenerateRequest(BaseModel): 
     feature_description: str
+    id: str
 
 @app.post("/generate")
 async def generate(generate_request: GenerateRequest):
-    run_id = str(uuid.uuid4())
+    run_id = generate_request.id
     await db.create_generation(run_id)
 
     print("Generating...", flush=True)
@@ -75,7 +76,7 @@ async def generate(generate_request: GenerateRequest):
         run_id=run_id,
         feature_description=generate_request.feature_description,
     )
-    return { "id": run_id, "status": "success", "message": "Generation started" }
+    return { "id": run_id, "status": "success" }
 
 
 host = "0.0.0.0"
