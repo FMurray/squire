@@ -32,41 +32,7 @@ export default function Home({ generations }: any) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-
-        <div className="flex justify-center border border-b-neutral-300 bg-neutral-100 py-2 text-sm text-neutral-500 dark:border-none dark:bg-[#444654] dark:text-neutral-200">
-            {/* {t('Model')}: {selectedConversation?.model.name} */}
-            <button
-            className="ml-2 cursor-pointer hover:opacity-50"
-            // onClick={handleSettings}
-            >
-            {/* <IconSettings size={18} /> */}
-            Settings
-            </button>
-            <button
-            className="ml-2 cursor-pointer hover:opacity-50"
-            // onClick={onClearAll}
-            >
-            {/* <IconClearAll size={18} /> */}
-            Clear All
-            </button>
-        </div>
-
-        {/* {selectedConversation?.messages.map((message, index) => (
-            <ChatMessage
-            key={index}
-            message={message}
-            messageIndex={index}
-            />
-        ))}
-
-        {loading && <ChatLoader />} */}
-
-        <div
-            className="h-[162px] bg-white dark:bg-[#343541]"
-        />
-
-        <Prompt></Prompt>
-
+        
         <div className={styles.grid}>
           <a
             href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
