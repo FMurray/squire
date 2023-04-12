@@ -64,19 +64,18 @@ def home():
 
 class GenerateRequest(BaseModel): 
     feature_description: str
-    id: str
 
 @app.post("/generate")
 async def generate(generate_request: GenerateRequest):
-    run_id = generate_request.id
+    run_id = str(uuid.uuid4())
     await db.create_generation(run_id)
 
     print("Generating...", flush=True)
-    await cg.generate(
+    asyncio.create_task(cg.generate(
         run_id=run_id,
         feature_description=generate_request.feature_description,
-    )
-    return { "id": run_id, "status": "success" }
+    ))
+    return { "id": run_id, "status": "Starting generation"}
 
 
 host = "0.0.0.0"

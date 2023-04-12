@@ -7,15 +7,18 @@ export function Prompt () {
 
     const [content, setContent] = useState<string>()
     const [generation, setGeneration] = useState<Generation>()
-    const [messages, setMessages] = useState<any[]>([])
-    const [ id, setId ] = useState<string>("bd70038d-8f5d-47c7-bb24-5d37bb699912")
+    const [logs, setLogs] = useState<any[]>([])
+    const [ id, setId ] = useState<string>()
 
     useEffect(() => {
+        if (!id) return
+
+        console.log("id", id)
 
         const subscription = supabase
             .channel('any')
-            .on('postgres_changes', { event: '*', schema: '*'}, (payload: any) => {
-                setMessages((previous: any) => [].concat(previous, payload.new))
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'generations', filter: `id=eq.${id}`}, (payload: any) => {
+                setLogs(payload.new.logs)
             })
             .subscribe()
 
@@ -23,7 +26,7 @@ export function Prompt () {
             console.log("I was unsubscribed!")
             subscription.unsubscribe()
         }
-    })
+    }, [supabase, id])
 
 
     const generate = () => {
@@ -41,6 +44,7 @@ export function Prompt () {
             .then(data => {
                 console.log(data)
                 setGeneration(data)
+                setId(data.id)
             })
 
     }
@@ -60,9 +64,9 @@ export function Prompt () {
 
     return (
         <>
-            {/* <ul>
-                { messages.map((message, index) => (<li key={index}>{message.toString()}</li>)) }
-            </ul> */}
+            <ul>
+                { logs }
+            </ul>
             <textarea
                 ref={textareaRef}
                 className="m-0 w-full resize-none border-0 bg-transparent p-0 py-2 pr-8 pl-10 text-black dark:bg-transparent dark:text-white md:py-3 md:pl-10"
@@ -86,6 +90,9 @@ export function Prompt () {
                 onChange={handleChange}
                 onKeyDown={handleKeyDown}
             />
+            {/* <Script id="show-banner" strategy="afterInteractive">
+                `console.log(hey)`
+            </Script> */}
         </>
     )
 }
