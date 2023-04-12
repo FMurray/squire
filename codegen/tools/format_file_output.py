@@ -9,7 +9,6 @@ class FormatFileOutput(BaseTool):
     )
 
     def _run(self, query: str) -> str:
-        print(query)
         """Use the tool."""
         return """
         Identify all the files in {query} and format them like this: 
@@ -18,4 +17,7 @@ class FormatFileOutput(BaseTool):
     
     async def _arun(self, query: str) -> str:
         """Use the tool asynchronously."""
-        raise NotImplementedError("GetAppConventions does not support async")
+        return """
+        Identify all the files in {query} and format them like this: 
+        path/to/file1: description of file1
+        """

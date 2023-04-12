@@ -45,9 +45,10 @@ class Database():
     def __init__(self, supabase_url, supabase_key): 
         self.client = Client(supabase_url=supabase_url, supabase_key=supabase_key)
 
-    async def create_generation(self, run_id): 
+    async def create_generation(self, run_id, feature_description): 
         await self.client.table(table_generations).insert({
-            "id": run_id
+            "id": run_id, 
+            "feature_description": feature_description
         }).execute()
 
     async def push_logs(self, run_id: str, logs: list[ToolLog | ThoughtLog]) -> None:
