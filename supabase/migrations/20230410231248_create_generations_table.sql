@@ -6,7 +6,5 @@ generations (
     logs_raw text
 );
 
-
-
 -- add a table to the publication
 alter publication supabase_realtime add table generations;
