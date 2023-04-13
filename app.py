@@ -70,7 +70,7 @@ background_tasks = set()
 @app.post("/generate")
 async def generate(generate_request: GenerateRequest):
     run_id = str(uuid.uuid4())
-    await db.create_generation(run_id)
+    await db.create_generation(run_id, generate_request.feature_description)
 
     print("Generating...", flush=True)
     task = asyncio.create_task(cg.generate(

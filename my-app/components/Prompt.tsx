@@ -30,7 +30,7 @@ export function Prompt () {
 
 
     const generate = () => {
-        const payload = { "feature_description": content, "id": id }
+        const payload = { "feature_description": content}
         console.log(payload)
 
         fetch('http://localhost:8000/generate', {
@@ -90,9 +90,6 @@ export function Prompt () {
                 onChange={handleChange}
                 onKeyDown={handleKeyDown}
             />
-            {/* <Script id="show-banner" strategy="afterInteractive">
-                `console.log(hey)`
-            </Script> */}
         </>
     )
 }
