@@ -1,0 +1,19 @@
+{
+  "name": "squire-cli",
+  "version": "0.0.1",
+  "description": "cli for squire",
+  "type": "module",
+  "scripts": {
+    "postinstall": "node scripts/postinstall.js"
+  },
+  "bin": {
+    "squire": "bin/squire"
+  },
+  "dependencies": {
+    "bin-links": "^4.0.1",
+    "node-fetch": "^3.2.10",
+    "tar": "6.1.13"
+  },
+  "author": "Forrest Murray",
+  "license": "ISC"
+}

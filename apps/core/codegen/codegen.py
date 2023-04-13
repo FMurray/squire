@@ -43,7 +43,6 @@ class Codegen(BaseModel):
         agent: Agent,
         **kwargs: Any,
     ) -> None:
-        super().__init__(**kwargs)
         self._database = database
         self._callback_manager = callback_manager
         self._tools = tools

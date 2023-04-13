@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "squire-ui": "file:./packages/squire-ui",
+    "squire": "file:../cli",
     "@supabase/supabase-js": "^2.19.0",
     "@types/node": "18.15.5",
     "@types/react": "18.0.28",
