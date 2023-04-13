@@ -1,6 +1,6 @@
 import { supabase } from '../lib/supabaseClient' 
 import { useEffect, useState} from 'react'
-import { Generation } from '@/models/Generation'
+import { Generation } from '@/packages/squire-ui/src/models/Generation'
 
 export function useLatestGenerationMessage(id: string ) {
     const client = supabase

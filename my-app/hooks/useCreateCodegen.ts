@@ -1,4 +1,4 @@
-import { Generation } from '@/models/Generation'
+import { Generation } from '@/packages/squire-ui/src/models/Generation'
 import { useEffect, useState } from 'react'
 
 export function useCreateGeneration(feature_description: string) {

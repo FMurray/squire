@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Generation } from '@/packages/squire-ui/src/models/Generation'
+import { Generation } from '../models/Generation'
 import { supabase } from '@/lib/supabaseClient'
 
 export function Prompt() {

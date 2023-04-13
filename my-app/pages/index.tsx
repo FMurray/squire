@@ -2,24 +2,9 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import styles from '@/styles/Home.module.css'
-import { supabase } from '../lib/supabaseClient'
 import { useEffect, useState } from 'react'
 
-import { Prompt } from '../components/Prompt'
-import { useLatestGenerationMessage } from '@/hooks/useLatestGeneration'
-
-
 const inter = Inter({ subsets: ['latin'] })
-
-export async function getServerSideProps() {
-    let { data } = await supabase.from('generations').select()
-
-    return {
-        props: {
-            generations: data
-        },
-    }
-}
 
 export default function Home({ generations }: any) {
 
@@ -32,9 +17,7 @@ export default function Home({ generations }: any) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-
-        <Prompt/>
-
+        
         <div className={styles.grid}>
           <a
             href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
