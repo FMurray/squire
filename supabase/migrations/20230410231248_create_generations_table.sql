@@ -1,4 +1,4 @@
-create table 
+create table
 generations (
     id uuid primary key,
     feature_description text,

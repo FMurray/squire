@@ -22,6 +22,7 @@ from codegen.prompts import (
     SYSTEM_PREFIX, SYSTEM_FORMAT_INSTRUCTIONS, SYSTEM_SUFFIX
 )
 from codegen.callbacks import LogsCallbackHandler
+from config import Config
 
 class Codegen(BaseModel):
     input_variables: ClassVar[List[str]] = ["input", "agent_scratchpad", "feature_description"]
@@ -77,7 +78,7 @@ class Codegen(BaseModel):
 
         # Create the LLM
         llm = ChatOpenAI(
-            model_name="gpt-4",
+            model_name=Config.openai_model_name,
             streaming=True,
             temperature=0,
             max_tokens=2056,
