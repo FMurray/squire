@@ -17,7 +17,7 @@ Sandbox for using OpenAI API to generate code based on a natural language featur
 `pip install -r requirements.txt`
 
 - install the next.js dependencies
-`cd my-app && yarn install`
+`cd ui && yarn install`
 
 - start supabase:
 `supabase start`
