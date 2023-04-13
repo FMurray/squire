@@ -26,6 +26,7 @@ export function Prompt() {
                         console.log(log)
                         if (log.content)
                             testLogs.push(log.content)
+                        console.log(testLogs)
                     })
                 }
             })
@@ -42,7 +43,7 @@ export function Prompt() {
         const payload = { "feature_description": content, "id": id }
         console.log(payload)
 
-        /* fetch('http://localhost:8000/generate', {
+        fetch('http://localhost:8000/generate', {
             method: 'POST',
             body: JSON.stringify(payload),
             headers: {
@@ -54,7 +55,7 @@ export function Prompt() {
                 console.log(data)
                 setGeneration(data)
                 setId(data.id)
-            }) */
+            })
 
     }
 
