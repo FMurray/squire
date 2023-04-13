@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "squire-ui": "file:./packages/squire-ui",
+    "squire-ui": "file:../ui",
     "squire": "file:../cli",
     "@supabase/supabase-js": "^2.19.0",
     "@types/node": "18.15.5",
