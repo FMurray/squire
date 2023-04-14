@@ -44,3 +44,7 @@
 - [ ] specify framework, with docs url so the tool can load the docs
   - [ ] add framework level conventions/semantics
 - [ ] specify "convention sets", almost like a style guide
+
+## Patterns
+
+- [ ] currently using the XML formatting from e2b, what are some other patterns that might be helpful for formatting system prompts?
