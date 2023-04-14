@@ -44,7 +44,7 @@ export default function Home() {
         />
       </div>
 
-      <Prompt></Prompt>
+      <Prompt client={client}></Prompt>
 
       <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-4 lg:text-left">
         <a

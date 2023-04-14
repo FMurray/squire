@@ -65,7 +65,7 @@ def home():
 class GenerateRequest(BaseModel): 
     feature_description: str
 
-background_tasks = set()
+background_tasks = {}
 
 @app.post("/generate")
 async def generate(generate_request: GenerateRequest):
@@ -77,9 +77,18 @@ async def generate(generate_request: GenerateRequest):
         run_id=run_id,
         feature_description=generate_request.feature_description,
     ))
-    task.add_done_callback(background_tasks.discard)
+
+    background_tasks[run_id] = task
+    task.add_done_callback(lambda x: background_tasks.pop(run_id, None))
     return { "id": run_id, "status": "Starting generation"}
 
+@app.get("/generate/stop/{id}")
+def stopGenerationId(id: str):
+    task = background_tasks.get(id)
+    if task is None:
+        raise HTTPException(status_code=404, detail="Task not found")
+    task.cancel()
+    return { "id": id, "status": "Cancelled"}
 
 host = "0.0.0.0"
 uvicorn.run(app, host=host, port=8000)

@@ -6,6 +6,7 @@ Object.defineProperty(exports, "default", {
     enumerable: true,
     get: ()=>DrawerSideBar
 });
+const _jsxruntime = require("react/jsx-runtime");
 const _react = /*#__PURE__*/ _interop_require_wildcard(require("react"));
 const _reactdaisyui = require("react-daisyui");
 const _DrawerItems = require("./DrawerItems");
@@ -66,28 +67,38 @@ function DrawerSideBar() {
         });
         setItems(newDrawerItems);
     };
-    return /*#__PURE__*/ _react.default.createElement("div", {
-        className: "w-screen bg-purple-500 rounded-b-md h-96"
-    }, /*#__PURE__*/ _react.default.createElement("div", {
-        className: "flex flex-row justify-evenly h-12 bg-gray-800",
-        id: "drawer-nav"
-    }, _DrawerItems.drawerItems?.map((item, index)=>{
-        return /*#__PURE__*/ _react.default.createElement("div", {
-            tabIndex: index,
-            key: item.name,
-            onFocus: ()=>toggleVisibleTabItem(item.name)
-        }, /*#__PURE__*/ _react.default.createElement(_reactdaisyui.Button, {
-            className: `'bg-gray-700 h-12 p-3 rounded-t-lg capitalize flex items-center w-max ml-2' ${item.visible && 'bg-purple-500'}`,
-            onClick: ()=>toggleVisibleTabItem(item.name)
-        }, item.name, item.visible && /*#__PURE__*/ _react.default.createElement("div", {
-            className: "bg-red-500 rounded-full ml-2 w-2 h-2 "
-        })));
-    }), /*#__PURE__*/ _react.default.createElement("div", {
-        className: "absolute self-start mt-10"
-    }, _DrawerItems.drawerItems?.map((item)=>{
-        return /*#__PURE__*/ _react.default.createElement("div", {
-            key: item.name,
-            className: `mt-12 w-full h-full' ${item.visible ? 'block' : 'hidden'}`
-        }, item.content());
-    }))));
+    return /*#__PURE__*/ (0, _jsxruntime.jsx)("div", {
+        className: "w-screen bg-purple-500 rounded-b-md h-96",
+        children: /*#__PURE__*/ (0, _jsxruntime.jsxs)("div", {
+            className: "flex flex-row justify-evenly h-12 bg-gray-800",
+            id: "drawer-nav",
+            children: [
+                _DrawerItems.drawerItems?.map((item, index)=>{
+                    return /*#__PURE__*/ (0, _jsxruntime.jsx)("div", {
+                        tabIndex: index,
+                        onFocus: ()=>toggleVisibleTabItem(item.name),
+                        children: /*#__PURE__*/ (0, _jsxruntime.jsxs)(_reactdaisyui.Button, {
+                            className: `'bg-gray-700 h-12 p-3 rounded-t-lg capitalize flex items-center w-max ml-2' ${item.visible && 'bg-purple-500'}`,
+                            onClick: ()=>toggleVisibleTabItem(item.name),
+                            children: [
+                                item.name,
+                                item.visible && /*#__PURE__*/ (0, _jsxruntime.jsx)("div", {
+                                    className: "bg-red-500 rounded-full ml-2 w-2 h-2 "
+                                })
+                            ]
+                        })
+                    }, item.name);
+                }),
+                /*#__PURE__*/ (0, _jsxruntime.jsx)("div", {
+                    className: "absolute self-start mt-10",
+                    children: _DrawerItems.drawerItems?.map((item)=>{
+                        return /*#__PURE__*/ (0, _jsxruntime.jsx)("div", {
+                            className: `mt-12 w-full h-full' ${item.visible ? 'block' : 'hidden'}`,
+                            children: item.content()
+                        }, item.name);
+                    })
+                })
+            ]
+        })
+    });
 }

@@ -18,4 +18,10 @@ Object.defineProperty(exports, "Prompt", {
     enumerable: true,
     get: ()=>_Prompt.Prompt
 });
+const _react = /*#__PURE__*/ _interop_require_default(require("react"));
 const _Prompt = require("./components/Prompt");
+function _interop_require_default(obj) {
+    return obj && obj.__esModule ? obj : {
+        default: obj
+    };
+}

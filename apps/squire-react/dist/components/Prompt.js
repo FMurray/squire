@@ -6,8 +6,10 @@ Object.defineProperty(exports, "Prompt", {
     enumerable: true,
     get: ()=>Prompt
 });
+const _jsxruntime = require("react/jsx-runtime");
 const _react = require("react");
-function Prompt(client) {
+const _reactdaisyui = require("react-daisyui");
+function Prompt({ client  }) {
     const textareaRef = (0, _react.useRef)(null);
     const [content, setContent] = (0, _react.useState)();
     const [generation, setGeneration] = (0, _react.useState)();
@@ -15,7 +17,8 @@ function Prompt(client) {
     const [testLogs, setTestLogs] = (0, _react.useState)([]);
     const [id, setId] = (0, _react.useState)();
     (0, _react.useEffect)(()=>{
-        if (!id) return;
+        if (!id || !client) return;
+        console.log(client);
         const subscription = client.channel('any').on('postgres_changes', {
             event: '*',
             schema: 'public',
@@ -23,14 +26,6 @@ function Prompt(client) {
             filter: `id=eq.${id}`
         }, (payload)=>{
             setLogs(payload.new.logs);
-            console.log("payload", payload);
-            if (payload.new.logs.length > 0) {
-                JSON.parse(payload.new.logs['Logs']).map((log)=>{
-                    console.log(log);
-                    if (log.content) testLogs.push(log.content);
-                    console.log(testLogs);
-                });
-            }
         }).subscribe();
         return ()=>{
             console.log("I was unsubscribed!");
@@ -63,14 +58,35 @@ function Prompt(client) {
             generate();
         }
     };
-    return /*#__PURE__*/ React.createElement(React.Fragment, null, /*#__PURE__*/ React.createElement("ul", null, logs), /*#__PURE__*/ React.createElement("textarea", {
-        className: "rounded-md  mt-2 p-2 ",
-        cols: 80,
-        ref: textareaRef,
-        placeholder: 'Type a message or type "/" to select a prompt...',
-        // onCompositionStart={() => setIsTyping(true)}
-        // onCompositionEnd={() => setIsTyping(false)}
-        onChange: (e)=>setContent(e.target.value),
-        onKeyDown: handleKeyDown
-    }));
+    const stopGeneration = ()=>{
+        fetch(`http://localhost:8000/generate/stop/${id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then((response)=>response.json()).then((data)=>{
+            console.log(data);
+        });
+    };
+    return /*#__PURE__*/ (0, _jsxruntime.jsxs)(_jsxruntime.Fragment, {
+        children: [
+            /*#__PURE__*/ (0, _jsxruntime.jsx)("ul", {
+                children: logs
+            }),
+            /*#__PURE__*/ (0, _jsxruntime.jsx)("textarea", {
+                className: "rounded-md  mt-2 p-2 ",
+                cols: 80,
+                ref: textareaRef,
+                placeholder: 'Type a message or type "/" to select a prompt...',
+                // onCompositionStart={() => setIsTyping(true)}
+                // onCompositionEnd={() => setIsTyping(false)}
+                onChange: (e)=>setContent(e.target.value),
+                onKeyDown: handleKeyDown
+            }),
+            /*#__PURE__*/ (0, _jsxruntime.jsx)(_reactdaisyui.Button, {
+                onClick: stopGeneration,
+                children: "Stop Generation, Man"
+            })
+        ]
+    });
 }

@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { Generation } from '../models/Generation'
+import { Button } from 'react-daisyui'
 
-export function Prompt(client: any) {
+export function Prompt({ client }: any) {
     const textareaRef = useRef<HTMLTextAreaElement>(null)
 
     const [content, setContent] = useState<string>()
@@ -11,21 +12,12 @@ export function Prompt(client: any) {
     const [id, setId] = useState<string>()
 
     useEffect(() => {
-        if (!id) return
-
+        if (!id || !client) return
+        console.log(client)
         const subscription = client
             .channel('any')
             .on('postgres_changes', { event: '*', schema: 'public', table: 'generations', filter: `id=eq.${id}` }, (payload: any) => {
                 setLogs(payload.new.logs)
-                console.log("payload", payload)
-                if (payload.new.logs.length > 0) {
-                    JSON.parse(payload.new.logs['Logs']).map((log: any) => {
-                        console.log(log)
-                        if (log.content)
-                            testLogs.push(log.content)
-                        console.log(testLogs)
-                    })
-                }
             })
             .subscribe()
 
@@ -63,6 +55,19 @@ export function Prompt(client: any) {
         }
     }
 
+    const stopGeneration = () => {
+        fetch(`http://localhost:8000/generate/stop/${id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+            })
+    }
+
     return (
         <>
             <ul>
@@ -79,6 +84,8 @@ export function Prompt(client: any) {
                 onChange={(e) => setContent(e.target.value)}
                 onKeyDown={handleKeyDown}
             />
+
+            <Button onClick={stopGeneration}>Stop Generation, Man</Button>
         </>
     )
 }

@@ -23,7 +23,7 @@ $INPUT
 </action>
 Observation: the result of the action
 ... (this Thought/Action/Observation can repeat N times)
-Thought: I now know the final server code and can show it.
+Thought: I now know the final code and can show it.
 Final Answer: the final answer"""
 
 SYSTEM_SUFFIX = ""
