@@ -1,27 +1,16 @@
-use tauri::{CustomMenuItem, Menu, MenuItem, Submenu};
-use tauri::api::dialog;
+#![cfg_attr(
+  all(not(debug_assertions), target_os = "windows"),
+  windows_subsystem = "windows"
+)]
+
+#[tauri::command]
+fn my_custom_command() {
+  println!("I was invoked from JS!");
+}
 
 fn main() {
-    let open = CustomMenuItem::new("open".to_string(), "Open");
-    let fileMenu = Submenu::new("File", Menu::new().add_item(open));
-    let menu = Menu::new()
-      .add_submenu(fileMenu)
-      .add_native_item(MenuItem::Separator)
-      .add_native_item(MenuItem::Quit);
-  
-    tauri::Builder::default()
-      .menu(menu)
-      .on_menu_event(|event| match event.menu_item_id() {
-        "open" => {
-          dialog::FileDialogBuilder::default()
-            .add_filter("Markdown", &["md"])
-            .pick_file(|path_buf| match path_buf {
-              Some(p) => {}
-              _ => {}
-            });
-        }
-        _ => {}
-      })
-      .run(tauri::generate_context!())
-      .expect("error while running tauri application");
+  tauri::Builder::default()
+    .invoke_handler(tauri::generate_handler![my_custom_command])
+    .run(tauri::generate_context!())
+    .expect("error while running tauri application");
 }
