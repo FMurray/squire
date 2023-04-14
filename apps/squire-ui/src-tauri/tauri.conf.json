@@ -11,7 +11,18 @@
   },
   "tauri": {
     "allowlist": {
-      "all": false
+      "all": false,
+      "fs": {
+        "all": true,
+        "scope": [
+            "$APPDATA/*", 
+            "$HOME/*", 
+            "$APPCONFIG/*"
+        ]
+      }, 
+      "dialog": {
+        "all": true
+      }
     },
     "bundle": {
       "active": true,
