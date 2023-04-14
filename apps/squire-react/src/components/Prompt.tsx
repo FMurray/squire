@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Generation } from '../models/Generation'
-import { supabase } from '@/lib/supabaseClient'
 
-export function Prompt() {
+export function Prompt(client: any) {
     const textareaRef = useRef<HTMLTextAreaElement>(null)
 
     const [content, setContent] = useState<string>()
@@ -14,9 +13,7 @@ export function Prompt() {
     useEffect(() => {
         if (!id) return
 
-        console.log("id", id)
-
-        const subscription = supabase
+        const subscription = client
             .channel('any')
             .on('postgres_changes', { event: '*', schema: 'public', table: 'generations', filter: `id=eq.${id}` }, (payload: any) => {
                 setLogs(payload.new.logs)
@@ -36,7 +33,7 @@ export function Prompt() {
             console.log("I was unsubscribed!")
             subscription.unsubscribe()
         }
-    }, [supabase, id])
+    }, [client, id])
 
 
     const generate = () => {

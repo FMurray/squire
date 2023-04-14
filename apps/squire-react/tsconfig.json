@@ -6,7 +6,7 @@
       "esModuleInterop": true,
       "module": "esnext",
       "moduleResolution": "node",
-
+      "jsx": "react-jsx",
       "strict": true, 
       "outDir": "./dist"
     },
