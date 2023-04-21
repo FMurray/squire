@@ -56,7 +56,7 @@ cg = Codegen.from_tools_and_database(
 
 # asyncio.run(run())
 
-app = FastAPI(title="Volo-gpt python api")
+app = FastAPI(title="Squire python api")
 
 origins = ["http://localhost:3000"]
 
@@ -163,6 +163,7 @@ async def generateChat(generate_request: GenerateRequest):
         chat(generate_request.feature_description, run_id=run_id),
         media_type="text/event-stream",
     )
+
 
 
 @app.get("/generate/stop/{id}")
