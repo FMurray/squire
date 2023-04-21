@@ -9,10 +9,18 @@ from config import Config
 import asyncio
 import uuid
 from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from pydantic import BaseModel
 
+from codegen.chat import chatgpt_chain
+from langchain.chat_models import ChatOpenAI
+from langchain.schema import (
+    HumanMessage,
+)
+from langchain.callbacks.base import CallbackManager
+from langchain.callbacks.streaming_aiter import AsyncIteratorCallbackHandler
 
 tools = [
     GetDirectoryStructure(),
@@ -67,8 +75,8 @@ class GenerateRequest(BaseModel):
 
 background_tasks = {}
 
-@app.post("/generate")
-async def generate(generate_request: GenerateRequest):
+@app.post("/generate/agent")
+async def generateAgent(generate_request: GenerateRequest):
     run_id = str(uuid.uuid4())
     await db.create_generation(run_id, generate_request.feature_description)
 
@@ -81,6 +89,13 @@ async def generate(generate_request: GenerateRequest):
     background_tasks[run_id] = task
     task.add_done_callback(lambda x: background_tasks.pop(run_id, None))
     return { "id": run_id, "status": "Starting generation"}
+
+@app.post("/generate/chat")
+async def generateChat(generate_request: GenerateRequest): 
+    # run_id = str(uuid.uuid4())
+    chat = ChatOpenAI(streaming=True, callback_manager=CallbackManager([AsyncIteratorCallbackHandler()]), verbose=True, temperature=0)
+
+    return StreamingResponse(chat([HumanMessage(content="Write me a song about sparkling water.")]))
 
 @app.get("/generate/stop/{id}")
 def stopGenerationId(id: str):
