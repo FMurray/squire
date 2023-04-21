@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "swc src -d dist",
-    "watch-compile": "tailwindcss -i ./src/input.css -o ./dist/output.css --watch && swc src -w --out-dir dist"
+    "styles:watch": "tailwindcss -i ./src/input.css -o ./dist/output.css --watch",
+    "compile:watch": "swc src -w --out-dir dist",
+    "build:watch:all": "npm run styles:watch & npm run compile:watch"
   },
   "author": "Forrest Murray",
   "license": "ISC",
