@@ -11,20 +11,34 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@supabase/auth-helpers-nextjs": "^0.6.0",
+    "@supabase/auth-helpers-react": "^0.3.1",
     "@supabase/supabase-js": "^2.20.0",
     "@tauri-apps/api": "^1.2.0",
     "@types/node": "18.15.11",
     "@types/react": "18.0.35",
     "@types/react-dom": "18.0.11",
+    "@types/uuid": "^9.0.1",
     "autoprefixer": "10.4.14",
+    "daisyui": "^2.51.5",
     "eslint": "8.38.0",
     "eslint-config-next": "13.3.0",
+    "feather-icons": "^4.29.0",
     "next": "13.3.0",
     "postcss": "8.4.21",
     "react": "18.2.0",
+    "react-daisyui": "^3.1.2",
     "react-dom": "18.2.0",
+    "react-feather": "^2.0.10",
+    "react-markdown": "^8.0.7",
+    "react-syntax-highlighter": "^15.5.0",
+    "remark-gfm": "^3.0.1",
+    "squire-react": "file:../squire-react/dist",
     "tailwindcss": "3.3.1",
     "typescript": "5.0.4",
-    "squire-react": "file:../squire-react/dist"
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/react-syntax-highlighter": "^15.5.6"
   }
 }

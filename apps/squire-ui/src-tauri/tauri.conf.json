@@ -14,13 +14,12 @@
       "all": false,
       "fs": {
         "all": true,
-        "scope": [
-            "$APPDATA/*", 
-            "$HOME/*", 
-            "$APPCONFIG/*"
-        ]
-      }, 
+        "scope": ["$APPDATA/*", "$HOME/*", "$APPCONFIG/*"]
+      },
       "dialog": {
+        "all": true
+      },
+      "clipboard": {
         "all": true
       }
     },

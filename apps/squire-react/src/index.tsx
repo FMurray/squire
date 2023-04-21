@@ -17,5 +17,5 @@
 import React from 'react';
 
 import { Prompt } from "./components/Prompt";
-
-export { Prompt };
+import { ToolList } from './components/Tools';
+export { Prompt, ToolList };
