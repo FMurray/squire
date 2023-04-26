@@ -41,28 +41,28 @@ export function Prompt({ client }: any) {
         }
     }, [client, activeGeneration])
     
-    useEffect(() => {
-        // get memory from Motorhead
-        if (!activeGeneration) return
+    // useEffect(() => {
+    //     // get memory from Motorhead
+    //     if (!activeGeneration) return
 
-        const getMemory = async () => {
+    //     const getMemory = async () => {
+    //         console.log(baseUrl + `chat/memory/${activeGeneration.id}`)
+    //         const response = await fetch(baseUrl + `generate/memory/${activeGeneration.id}`, {
+    //             method: 'GET',
+    //             headers: {
+    //                 'Content-Type': 'application/json'
+    //             }
+    //         })
+    //         const data:any = await response.json()
 
-            const response = await fetch(baseUrl + `generate/memory/${activeGeneration.id}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            const data:any = await response.json()
+    //         if (data) {
+    //             setStreamingText(data)
+    //         }
+    //     }
 
-            if (data) {
-                setStreamingText(data)
-            }
-        }
+    //     getMemory()
 
-        getMemory()
-
-    }, [activeGeneration, endpoint])
+    // }, [activeGeneration, endpoint])
 
     const generate = async () => {
         const payload = { "feature_description": content, "run_id": activeGeneration?.id}
@@ -86,13 +86,15 @@ export function Prompt({ client }: any) {
               // })
         } else {
             setStreamingText("")
-            const response = await fetch(endpoint, {
+            console.log(activeGeneration)
+            const response = await fetch("http://localhost:8000/generate/chat", {
                 method: 'POST',
                 body: JSON.stringify(payload),
                 headers: {
                     'Content-Type': 'application/json'
                 }
             })
+            console.log(response)
             const reader = response.body?.pipeThrough(new TextDecoderStream()).getReader();
 
             while (reader && true) {

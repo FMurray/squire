@@ -42,8 +42,9 @@ export const TabWrapper = ({ children }) => {
 
     const handleAddTab = () => {
       const newTab = {
-        key: generateUniqueId(),
+        id: generateUniqueId(),
         generation_name: 'Untitled',
+        prompt_type: 'chat'
       };
       setGenerations((prev) => [...prev, newTab]);
       setActiveGeneration(newTab);

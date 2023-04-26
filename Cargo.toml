@@ -1,0 +1,5 @@
+[workspace]
+members = [
+  "apps/squire-server/squire",
+  "apps/squire-ui/src-tauri"
+]

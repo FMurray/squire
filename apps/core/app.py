@@ -187,17 +187,17 @@ async def generateChat(generate_request: GenerateRequest):
     )
 
 
-@app.post("generate/chat/{id}")
-async def generateChatId(id: str):
-    # Handle reponse for if a chat is still generating
-    (task, cancel) = background_tasks.get(id)
-    if task is not None:
-        raise HTTPException(status_code=409, detail="Chat is still generating")
+# @app.get("/chat/{id}")
+# async def generateChatId(id: str):
+#     # Handle reponse for if a chat is still generating
+#     (task, cancel) = background_tasks.get(id)
+#     if task is not None:
+#         raise HTTPException(status_code=409, detail="Chat is still generating")
 
-    return StreamingResponse(
-        task,
-        media_type="text/event-stream",
-    )
+#     return StreamingResponse(
+#         task,
+#         media_type="text/event-stream",
+#     )
 
 
 @app.get("/generate/stop/{id}")
@@ -223,7 +223,7 @@ async def task(id):
         return result
 
 
-@app.get("/generate/memory/{id}")
+@app.get("/chat/memory/{id}")
 async def getMemory(id: str):
     response = await task(id)
     return response
