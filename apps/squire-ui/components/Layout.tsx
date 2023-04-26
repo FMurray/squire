@@ -1,9 +1,12 @@
 import { Navbar } from './Navbar'
+import { TabWrapper } from './TabWrapper'
 
 const Layout = ({ children }:any) => (
   <>
     <Navbar />
-    <main>{children}</main>
+    <TabWrapper>
+      <main className='relative'>{children}</main>
+    </TabWrapper>
   </>
 )
 

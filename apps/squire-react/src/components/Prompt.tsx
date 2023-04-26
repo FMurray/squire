@@ -13,7 +13,7 @@ export function Prompt({ client }: any) {
 
     useEffect(() => {
         if (!id || !client) return
-        console.log(client)
+
         const subscription = client
             .channel('any')
             .on('postgres_changes', { event: '*', schema: 'public', table: 'generations', filter: `id=eq.${id}` }, (payload: any) => {

@@ -1,0 +1,22 @@
+{
+  "name": "squire",
+  "version": "0.0.1",
+  "description": "Full stack framework with LLM superpowers",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start-app": "npm --prefix apps/squire-ui run tauri-dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FMurray/squire.git"
+  },
+  "author": "Forrest Murray",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/FMurray/squire/issues"
+  },
+  "homepage": "https://github.com/FMurray/squire#readme",
+  "devDependencies": {
+    "@tauri-apps/cli": "^1.2.3"
+  }
+}

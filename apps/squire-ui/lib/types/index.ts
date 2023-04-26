@@ -1,5 +1,6 @@
 export type UITabType = {
     key: string;
     searchHistory?: string[];
-    name: string;
+    generation_name: string;
+    prompt_type: string;
   };

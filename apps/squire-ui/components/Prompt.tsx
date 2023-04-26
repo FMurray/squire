@@ -1,10 +1,7 @@
-import { useEffect, useRef, useState } from 'react'
-import { Generation } from '@squire-ui/lib/models'
-import { ReactMarkdown } from 'react-markdown/lib/react-markdown'
-import remarkGfm from 'remark-gfm'
-import { v4 as uuidv4 } from 'uuid';
+import { useContext, useEffect, useRef, useState } from 'react'
 
-import { CodeBlock } from "@squire-ui/components/CodeBlock"
+import { GenerationsContext, TabsContext } from '@squire-ui/lib/context';
+import { ChatDisplay } from './ChatDisplay';
 
 const promptTypes = {
   "agent": {
@@ -22,19 +19,18 @@ export function Prompt({ client }: any) {
     const baseUrl = "http://localhost:8000/"
 
     const [content, setContent] = useState<string>()
-    const [generation, setGeneration] = useState<Generation>()
     const [endpoint, setEndpoint] = useState<string>("")
     const [logs, setLogs] = useState<any[]>([])
     const [streamingText, setStreamingText] = useState<string>('')
-    const [id, setId] = useState<string>(uuidv4())
-    const [promptType, setPromptType] = useState<string>("agent")
+    const { activeGeneration } = useContext(GenerationsContext)
+    const [ _promptType, setPromptType] = useState<string>(activeGeneration?.prompt_type || "chat")
 
     useEffect(() => {
-        if (!id || !client) return
-        console.log(client)
+        if (!activeGeneration || !client) return
+
         const subscription = client
             .channel('any')
-            .on('postgres_changes', { event: '*', schema: 'public', table: 'generations', filter: `id=eq.${id}` }, (payload: any) => {
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'generations', filter: `id=eq.${activeGeneration.id}` }, (payload: any) => {
                 setLogs(payload.new.logs)
             })
             .subscribe()
@@ -43,11 +39,33 @@ export function Prompt({ client }: any) {
             console.log("I was unsubscribed!")
             subscription.unsubscribe()
         }
-    }, [client, id])
+    }, [client, activeGeneration])
+    
+    useEffect(() => {
+        // get memory from Motorhead
+        if (!activeGeneration) return
 
+        const getMemory = async () => {
+
+            const response = await fetch(baseUrl + `generate/memory/${activeGeneration.id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            const data:any = await response.json()
+
+            if (data) {
+                setStreamingText(data)
+            }
+        }
+
+        getMemory()
+
+    }, [activeGeneration, endpoint])
 
     const generate = async () => {
-        const payload = { "feature_description": content, "run_id": id}
+        const payload = { "feature_description": content, "run_id": activeGeneration?.id}
         console.log(payload)
 
         if (endpoint.indexOf("agent") > -1) {
@@ -59,8 +77,7 @@ export function Prompt({ client }: any) {
                 }
             })
           const data:any = response.json()
-          setGeneration(data)
-          setId(data)
+        //   setId(data)
               // .then(response => response.json())
               // .then(data => {
               //     console.log(data)
@@ -79,12 +96,11 @@ export function Prompt({ client }: any) {
             const reader = response.body?.pipeThrough(new TextDecoderStream()).getReader();
 
             while (reader && true) {
-              const {value, done} = await reader.read();
-              if (done) break;
-              console.log('Received', value);
-              setStreamingText((prev) => prev + value )
+                const {value, done} = await reader.read();
+                if (done) break;
+                setStreamingText((prev) => prev + value )
             }
-
+                        
             console.log('Response fully received');
         }
     }
@@ -98,7 +114,7 @@ export function Prompt({ client }: any) {
     }
 
     const stopGeneration = () => {
-        fetch(`http://localhost:8000/generate/stop/${id}`, {
+        fetch(`http://localhost:8000/generate/stop/${activeTab}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -119,48 +135,41 @@ export function Prompt({ client }: any) {
 
     return (
         <>
-          <select onChange={handlePromptSelect} className="select w-full max-w-xs">
-            <option disabled selected>Prompt Type:</option>
-              { Object.keys(promptTypes).map((type) => (
-                  <option>{ type }</option>
-              )) }
-          </select>
-
-
-            { promptType === "chat" ? (
-             <ReactMarkdown
-              children={streamingText}
-              remarkPlugins={[remarkGfm]}
-              components={{
-                code({node, inline, className, children, style, ...props}) {
-                  const match = /language-(\w+)/.exec(className || '')
-                  return (
-                    <CodeBlock node={node} inline={inline || false} children={children} style={style || null} className={className || ""}/>
-                  )
-                }
-              }}
-            />
-             
-
+            <h1> {activeGeneration?.id} </h1>
+            { _promptType === "chat" ? (
+                <ChatDisplay content={streamingText}></ChatDisplay>
               ) : (
                   <ul>
                     {logs}
                 </ul>)
             }
+            
+            <div>
+                <textarea className='rounded-md  mt-2 p-2 ' cols={85}
+                    ref={textareaRef}
+                    placeholder={
+                        'Type a message or type "/" to select a prompt...'
+                    }
+                    // onCompositionStart={() => setIsTyping(true)}
+                    // onCompositionEnd={() => setIsTyping(false)}
+                    onChange={(e) => setContent(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                />
 
-            <textarea className='rounded-md  mt-2 p-2 ' cols={80}
-                ref={textareaRef}
-                placeholder={
-                    'Type a message or type "/" to select a prompt...'
-                }
-                // onCompositionStart={() => setIsTyping(true)}
-                // onCompositionEnd={() => setIsTyping(false)}
-                onChange={(e) => setContent(e.target.value)}
-                onKeyDown={handleKeyDown}
-            />
+                <div className="flex justify-between"> 
+                    <select onChange={handlePromptSelect} value={_promptType} className="select flex-1 w-64 max-w-md">
+                        <option disabled selected>Prompt Type:</option>
+                        { Object.keys(promptTypes).map((type) => (
+                            <option>{ type }</option>
+                        )) }
+                    </select>
 
 
-            <button onClick={stopGeneration} className="btn btn-primary">Stop Generation</button>
+                    <button onClick={stopGeneration} className="btn btn-primary w-32">Stop Generation</button>
+                </div>
+
+            </div>
+
         </>
     )
 }

@@ -3,34 +3,62 @@
   windows_subsystem = "windows"
 )]
 
-#[tauri::command]
-fn my_custom_command() {
-  println!("I was invoked from JS!");
+mod qdrant;
+mod state;
+
+pub use tauri::{plugin, App, AppHandle, Manager, Runtime, State};
+
+use state::{AppState};
+
+use std::sync::{Arc};
+
+#[derive(Clone, serde::Serialize)]
+struct Payload {
+  message: String,
 }
 
-use tauri::{CustomMenuItem, Menu, MenuItem, Submenu};
+// #[tauri::command]
+// async fn list_collections(app_handle: AppHandle) {
+//     // // Should handle errors instead of unwrapping here
+//     // app_handle.qdrant(|qdrant| qdrant::add_item(name, qdrant)).unwrap();
 
-fn main() {
-  let quit = CustomMenuItem::new("quit".to_string(), "Quit");
-  let close = CustomMenuItem::new("close".to_string(), "Close");
-  
-  let submenu = Submenu::new("File", Menu::new().add_item(quit).add_item(close));
-  let prompts_submenu = Submenu::new(
-    "Prompts",
-    Menu::new()
-      .add_item(CustomMenuItem::new("alert", "Alert"))
-      .add_item(CustomMenuItem::new("confirm", "Confirm"))
-      .add_item(CustomMenuItem::new("prompt", "Prompt")),
-  );
-  let menu = Menu::new()
-    .add_native_item(MenuItem::Copy)
-    .add_item(CustomMenuItem::new("hide", "Hide"))
-    .add_submenu(submenu)
-    .add_submenu(prompts_submenu);
+//     let items = app_handle.qdrant(|qdrant| qdrant::list_collections(qdrant)).await;
+//     dbg!(items);
 
+//     // format!("Your name log: {}", items_string)
+// }
+
+
+#[tokio::main]
+async fn main() {
   tauri::Builder::default()
-    .menu(menu)
-    .invoke_handler(tauri::generate_handler![my_custom_command])
+    // .manage(AppState { qdrant: Arc::default() })
+    // .setup(|app| {
+    //   let app_handle = app.handle();
+    //   let app_state: State<AppState> = app_handle.state();
+
+    //   let qdrant_conn_state = Arc::clone(&app_state.qdrant);
+      
+    //   tauri::async_runtime::spawn(async move {
+    //     let rt = tokio::runtime::Handle::current();
+    //     let rt_ = rt.clone();
+    //     rt.spawn_blocking(move || {
+    //       let mut conn_state = qdrant_conn_state.lock().unwrap()
+    //       rt_.block_on(async {
+    //         // let client = tokio::task::LocalSet::new();
+    //         // client
+    //         //   .run_until(qdrant::initialize_qdrant(&app_handle))
+    //         //   .await;
+    //         let client = qdrant::initialize_qdrant(&app_handle)
+    //         *conn_state = client;
+    //       })
+    //     })
+
+        
+    //   });
+
+    //   Ok(())
+    // })
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
 }

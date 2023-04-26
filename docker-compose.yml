@@ -1,19 +1,45 @@
 version: '3'
 services:
-  server:
-    image: postgrest/postgrest
+
+  # Start Python langchain backend
+  #================
+  core:
+    build: ./apps/core
+    ports: 
+      - '8000:8000'
+    env_file:
+      - .env 
+  # End Python langchain backend
+  #================
+
+
+  #================
+  # Start Motorbase memory server
+  motorhead: 
+    image: ghcr.io/getmetal/motorhead:latest
     ports:
-      - "3000:3000"
+      - '8080:8080'
+    links:
+      - redis
     environment:
-      PGRST_DB_URI: postgres://app_user:password@db:5432/app_db
-      PGRST_OPENAPI_SERVER_PROXY_URI: http://127.0.0.1:3000
-    depends_on:
-      - db
-  db:
-    image: postgres
+      MOTORHEAD_PORT: 8080
+      MOTORHEAD_LONG_TERM_MEMORY: 'true'
+      REDIS_URL: 'redis://redis:6379'
+    env_file:
+      - .env
+  redis:
+    image: redis/redis-stack-server:latest
     ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_DB: app_db
-      POSTGRES_USER: app_user
-      POSTGRES_PASSWORD: password
+      - '6379:6379'
+  
+  # End Motorbase memory server
+  #================
+
+
+  #================
+  # Start Qdrant vectorstore
+
+  index: 
+    image: qdrant/qdrant
+    ports:
+      - '6333:6333'

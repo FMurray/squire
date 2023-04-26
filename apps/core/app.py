@@ -21,9 +21,12 @@ from langchain.chat_models import ChatOpenAI
 from langchain.schema import HumanMessage, SystemMessage
 from langchain.callbacks.base import CallbackManager
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
+from langchain.memory.motorhead_memory import MotorheadMemory
+from langchain import LLMChain, PromptTemplate
 
 import queue
 import threading
+import httpx
 
 tools = [
     GetDirectoryStructure(),
@@ -100,29 +103,43 @@ class ChainStreamHandler(StreamingStdOutCallbackHandler):
         self.gen.send(token)
 
 
-def llm_thread(g, prompt):
+def llm_thread(g, input, memory):
+    # Load chat memory from Motorhead
     try:
-        chat = ChatOpenAI(
+        chat_llm = ChatOpenAI(
             verbose=True,
             streaming=True,
             callback_manager=CallbackManager([ChainStreamHandler(g)]),
             temperature=0.7,
         )
-        chat(
-            [
-                SystemMessage(content="You are a code assistant"),
-                HumanMessage(content=prompt),
-            ]
+        template = """You are a chatbot having a conversation with a human.
+
+        {chat_history}
+        Human: {human_input}
+        AI:"""
+
+        prompt = PromptTemplate(
+            input_variables=["chat_history", "human_input"], template=template
         )
+
+        llm_chain = LLMChain(llm=chat_llm, prompt=prompt, memory=memory)
+
+        # chat(
+        #     [
+        #         SystemMessage(content="You are a code assistant"),
+        #         HumanMessage(content=prompt),
+        #     ]
+        # )
+        llm_chain.run(input)
 
     finally:
         g.close()
 
 
-def chat(prompt, run_id):
+def chat(prompt, run_id, memory):
     g = ThreadedGenerator()
     background_tasks[run_id] = (g, g.close)
-    threading.Thread(target=llm_thread, args=(g, prompt)).start()
+    threading.Thread(target=llm_thread, args=(g, prompt, memory)).start()
     return g
 
 
@@ -159,11 +176,28 @@ async def generateChat(generate_request: GenerateRequest):
     run_id = generate_request.run_id
     # chat = ChatOpenAI(streaming=True, callback_manager=AsyncCallbackManager([AsyncIteratorCallbackHandler()]), verbose=True, temperature=0)
     # response = await chat([HumanMessage(content=generate_request.feature_description)])
+    memory = MotorheadMemory(
+        session_id=run_id, url=Config.motorhead_url, memory_key="chat_history"
+    )
+    await memory.init()
+    print("existing session memory: ", memory)
     return StreamingResponse(
-        chat(generate_request.feature_description, run_id=run_id),
+        chat(generate_request.feature_description, run_id, memory=memory),
         media_type="text/event-stream",
     )
 
+
+@app.post("generate/chat/{id}")
+async def generateChatId(id: str):
+    # Handle reponse for if a chat is still generating
+    (task, cancel) = background_tasks.get(id)
+    if task is not None:
+        raise HTTPException(status_code=409, detail="Chat is still generating")
+
+    return StreamingResponse(
+        task,
+        media_type="text/event-stream",
+    )
 
 
 @app.get("/generate/stop/{id}")
@@ -173,6 +207,26 @@ def stopGenerationId(id: str):
         raise HTTPException(status_code=404, detail="Task not found")
     cancel()
     return {"id": id, "status": "Cancelled"}
+
+
+async def request(client, id):
+    response = await client.get(f"http://localhost:8080/sessions/{id}/memory")
+    return response.text
+
+
+async def task(id):
+    async with httpx.AsyncClient() as client:
+        # tasks = [request(client) for i in range(100)]
+        # tasks = [request(client, id)]
+        # result = await asyncio.gather(*tasks)
+        result = await request(client, id)
+        return result
+
+
+@app.get("/generate/memory/{id}")
+async def getMemory(id: str):
+    response = await task(id)
+    return response
 
 
 host = "0.0.0.0"

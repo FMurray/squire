@@ -1,4 +1,5 @@
 import { createContext } from 'react';
+import { Generation } from '../models';
 import { UITabType } from '../types';
 
 type TabContextType = {
@@ -11,11 +12,21 @@ type TabContextType = {
 };
 
 export const TabsContext = createContext<TabContextType>({
-  tabs: [{ key: 'initial', name: 'Untitled search' }],
+  tabs: [{ key: 'initial', name: 'Untitled search', prompt_type: 'chat' }],
   activeTab: 'initial',
   handleAddTab: () => {},
   handleRemoveTab: () => {},
   setActiveTab: () => {},
   updateCurrentTabName: () => {},
 });
+
+type GenerationsContextType = {
+  generations: Generation[]
+  activeGeneration: Generation | null
+}
+
+export const GenerationsContext = createContext<GenerationsContextType>({
+  generations: [],
+  activeGeneration: null
+})
 
